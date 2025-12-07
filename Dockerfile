@@ -41,6 +41,9 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Install Prisma CLI globally to avoid npx download prompts
+RUN npm install -g prisma@5.22.0
+
 USER nextjs
 
 EXPOSE 3000
