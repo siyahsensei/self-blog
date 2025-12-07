@@ -28,6 +28,12 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/package.json ./package.json
+
+# Copy entrypoint script
+COPY entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
 
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
@@ -41,4 +47,5 @@ EXPOSE 3000
 
 ENV PORT 3000
 
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["node", "server.js"]
