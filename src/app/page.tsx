@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import PostCard from '@/components/PostCard';
 import Sidebar from '@/components/Sidebar';
 import Pagination from '@/components/Pagination';
+import { Post } from '@prisma/client';
 import styles from './page.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -39,7 +40,7 @@ export default async function Home({
   const totalPages = Math.ceil(total / limit);
   const baseUrl = tag ? `/?tag=${tag}&` : '/?';
 
-  
+
   const allPosts = await prisma.post.findMany({
     where: { status: 'PUBLISHED' },
     select: { tags: true },
@@ -49,10 +50,10 @@ export default async function Home({
 
   return (
     <div className={styles.wrapper}>
-      {}
+      { }
       <section className={styles.hero}>
         <div className="container-wide">
-          <h1 className={styles.blogTitle}>Attila Clone</h1>
+          <h1 className={styles.blogTitle}>Siyahsensei's Tech Blog</h1>
           <p className={styles.blogDescription}>Thoughts, stories and ideas.</p>
         </div>
       </section>
@@ -62,7 +63,7 @@ export default async function Home({
           <div className={styles.feedColumn}>
             <div className={styles.feed}>
               {posts.length > 0 ? (
-                posts.map((post) => (
+                posts.map((post: Post) => (
                   <PostCard key={post.id} post={post} />
                 ))
               ) : (

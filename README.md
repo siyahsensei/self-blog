@@ -9,6 +9,7 @@ A minimalist, developer-focused blog built with Next.js 14+, TypeScript, Postgre
 - **ORM:** Prisma
 - **Styling:** CSS Modules (No Tailwind)
 - **Markdown:** react-markdown + react-syntax-highlighter
+- **Image Upload:** MinIO
 
 ## Features
 - **Public:**
@@ -21,6 +22,7 @@ A minimalist, developer-focused blog built with Next.js 14+, TypeScript, Postgre
   - Create, Edit, Delete posts.
   - Live Markdown preview.
   - Draft/Published status.
+  - Image upload.
 
 ## Setup Instructions
 

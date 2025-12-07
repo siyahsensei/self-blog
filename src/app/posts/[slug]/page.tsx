@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: PostProps): Promise<Metadata>
         };
     }
 
-    const ogImage = post.featuredImage || '/default-og.png'; 
+    const ogImage = post.featuredImage || '/default-og.png';
 
     return {
         title: post.title,
@@ -67,14 +67,14 @@ export default async function PostPage({ params }: PostProps) {
         author: {
             '@type': 'Person',
             name: 'Siyah Sensei',
-            url: 'https://siyahsensei.com/about'
+            url: 'https://blog.siyahsensei.com/about'
         },
         publisher: {
             '@type': 'Organization',
             name: 'Siyah Sensei Blog',
             logo: {
                 '@type': 'ImageObject',
-                url: 'https://siyahsensei.com/logo.png'
+                url: 'https://blog.siyahsensei.com/logo.png'
             }
         },
         description: post.content.substring(0, 160).replace(/[#*`]/g, '') + '...',
