@@ -22,7 +22,7 @@ const firaCode = Fira_Code({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://siyahsensei.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://blog.siyahsensei.com'),
   title: {
     default: 'Siyah Sensei Blog',
     template: '%s | Siyah Sensei Blog',
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Siyah Sensei Blog',
     description: 'Technical tutorials on Software Engineering, Next.js, and Systems Architecture.',
-    url: 'https://siyahsensei.com',
+    url: 'https://blog.siyahsensei.com',
     siteName: 'Siyah Sensei Blog',
     locale: 'en_US',
     type: 'website',
