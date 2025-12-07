@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const tag = searchParams.get('tag');
@@ -51,8 +53,8 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const { title, content, tags, status, slug } = body;
 
-        
-        
+
+
         const finalSlug = slug || title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
 
         const post = await prisma.post.create({

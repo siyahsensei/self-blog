@@ -2,6 +2,8 @@ import { prisma } from '@/lib/prisma';
 import PageEditor from './PageEditor';
 import { notFound } from 'next/navigation';
 
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
     params: Promise<{ slug: string }>;
 }
