@@ -5,6 +5,10 @@ set -e
 echo "Syncing database schema..."
 prisma db push --skip-generate
 
+# Seed the database
+echo "Seeding database..."
+prisma db seed
+
 # Start the application
 echo "Starting the application..."
 exec "$@"
