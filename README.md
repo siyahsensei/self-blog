@@ -57,8 +57,8 @@ A minimalist, developer-focused blog built with Next.js 14+, TypeScript, Postgre
    Visit `http://localhost:3000`.
 
 ## Admin Access
-- URL: `/admin`
-- User: `admin`
+- URL: `/kara`
+- User: `kara`
 - Password: `changeme` (or value in `.env`)
 
 ## Deployment
