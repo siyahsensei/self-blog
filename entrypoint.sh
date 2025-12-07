@@ -1,9 +1,9 @@
 #!/bin/sh
 set -e
 
-# Apply database migrations
-echo "Applying database migrations..."
-prisma migrate deploy
+# Sync database schema (using db push since no migrations exist)
+echo "Syncing database schema..."
+prisma db push
 
 # Start the application
 echo "Starting the application..."
