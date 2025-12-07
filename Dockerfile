@@ -43,6 +43,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Install Prisma CLI globally to avoid npx download prompts
 RUN npm install -g prisma@5.22.0
+RUN npm install -g tsx
 
 USER nextjs
 

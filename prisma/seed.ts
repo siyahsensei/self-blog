@@ -5,10 +5,18 @@ import 'dotenv/config';
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log('Seeding database...');
+    console.log('Checking database...');
 
-    
-    await prisma.post.deleteMany();
+    // Check if database already has data
+    const existingPosts = await prisma.post.count();
+    const existingPages = await prisma.page.count();
+
+    if (existingPosts > 0 || existingPages > 0) {
+        console.log('Database already contains data. Skipping seed.');
+        return;
+    }
+
+    console.log('Database is empty. Seeding...');
 
     await prisma.post.create({
         data: {
@@ -49,28 +57,68 @@ syntax on
         },
     });
 
-    
+
     await prisma.page.upsert({
         where: { slug: 'about' },
         update: {},
         create: {
-            title: 'About Me',
+            id: '0aabfd20-b3ee-4eca-a322-7eb13f49ad93',
+            title: 'About',
             slug: 'about',
-            content: `
-# About Me
+            content: `# About Me
 
-I am a passionate developer building a technical blog with Next.js and Prisma.
+Welcome to my **technical blog**! I'm a *passionate developer* who loves building modern web applications and sharing knowledge with the community.
 
-## Tech Stack
-- Next.js 14+ (App Router)
-- TypeScript
-- PostgreSQL
-- Prisma
-- MinIO
+## What I Do
 
-## Contact
-Feel free to reach out to me via email or social media.
-            `.trim(),
+I specialize in full-stack development with a focus on:
+
+- **Frontend**: React, Next.js, TypeScript
+- **Backend**: Node.js, Express, Prisma
+- **Database**: PostgreSQL, Redis
+- **DevOps**: Docker, CI/CD, Self-hosting
+
+## My Tech Stack
+
+This blog is built using cutting-edge technologies:
+
+\`\`\`javascript
+const techStack = {
+  framework: "Next.js 14+",
+  language: "TypeScript",
+  database: "PostgreSQL",
+  orm: "Prisma",
+  storage: "MinIO",
+  deployment: "Docker"
+};
+\`\`\`
+
+## Philosophy
+
+> "The best way to learn is to teach others."
+
+I believe in *open source*, **continuous learning**, and ***sharing knowledge*** with the developer community.
+
+## Topics I Write About
+
+1. Web Development
+2. Self-hosting Solutions
+3. DevOps & Infrastructure
+4. Software Architecture
+5. Developer Tools & Productivity
+
+## Get In Touch
+
+Feel free to reach out via:
+
+- Email: \`your@email.com\`
+- GitHub: [github.com/yourusername](https://github.com)
+- Twitter: [@yourusername](https://twitter.com)
+
+---
+
+*Thanks for visiting!* 🚀
+`,
         },
     });
 
