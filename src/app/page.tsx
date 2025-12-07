@@ -1,64 +1,85 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import { prisma } from '@/lib/prisma';
+import PostCard from '@/components/PostCard';
+import Sidebar from '@/components/Sidebar';
+import Pagination from '@/components/Pagination';
+import styles from './page.module.css';
 
-export default function Home() {
+export const dynamic = 'force-dynamic';
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ tag?: string; page?: string }>;
+}) {
+  const { tag, page } = await searchParams;
+  const currentPage = parseInt(page || '1');
+  const limit = 10;
+  const skip = (currentPage - 1) * limit;
+
+  const where: any = {
+    status: 'PUBLISHED',
+  };
+
+  if (tag) {
+    where.tags = {
+      has: tag,
+    };
+  }
+
+  const [posts, total] = await prisma.$transaction([
+    prisma.post.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.post.count({ where }),
+  ]);
+
+  const totalPages = Math.ceil(total / limit);
+  const baseUrl = tag ? `/?tag=${tag}&` : '/?';
+
+  
+  const allPosts = await prisma.post.findMany({
+    where: { status: 'PUBLISHED' },
+    select: { tags: true },
+  });
+
+  const tags = Array.from(new Set(allPosts.flatMap(p => p.tags))).sort();
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className={styles.wrapper}>
+      {}
+      <section className={styles.hero}>
+        <div className="container-wide">
+          <h1 className={styles.blogTitle}>Attila Clone</h1>
+          <p className={styles.blogDescription}>Thoughts, stories and ideas.</p>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+      </section>
+
+      <main className={`container-wide ${styles.main}`}>
+        <div className={styles.contentWrapper}>
+          <div className={styles.feedColumn}>
+            <div className={styles.feed}>
+              {posts.length > 0 ? (
+                posts.map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))
+              ) : (
+                <p className={styles.empty}>No posts found.</p>
+              )}
+            </div>
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              baseUrl={baseUrl}
             />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
+
+          <div className={styles.sidebarColumn}>
+            <Sidebar tags={tags} activeTag={tag} />
+          </div>
         </div>
       </main>
     </div>
