@@ -1,0 +1,59 @@
+.sidebar {
+    position: sticky;
+    top: 8rem;
+    
+    height: fit-content;
+    padding: 1rem 0;
+}
+
+.title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--foreground);
+}
+
+.divider {
+    width: 40px;
+    height: 2px;
+    background: var(--primary);
+    margin-bottom: 1.5rem;
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+}
+
+.list li {
+    margin-bottom: 0.75rem;
+}
+
+.link {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--secondary);
+    transition: all 0.2s ease;
+    display: block;
+    text-transform: capitalize;
+}
+
+.link:hover {
+    color: var(--primary);
+    transform: translateX(4px);
+}
+
+.active {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+@media (max-width: 1024px) {
+    .sidebar {
+        position: static;
+        margin-top: 4rem;
+        border-top: 1px solid var(--border);
+        padding-top: 3rem;
+    }
+}

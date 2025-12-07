@@ -1,0 +1,114 @@
+.container {
+    width: 100%;
+    padding: 0;
+}
+
+.header {
+    padding: 2rem 4vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: var(--background);
+}
+
+.header h1 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.createBtn {
+    background: var(--primary);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.createBtn:hover {
+    opacity: 0.9;
+}
+
+.tableWrapper {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-body);
+}
+
+.table th {
+    text-align: left;
+    padding: 1rem 4vw;
+    border-bottom: 1px solid var(--border);
+    color: var(--secondary);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    background: var(--card-bg);
+}
+
+.table td {
+    padding: 1.5rem 4vw;
+    border-bottom: 1px solid var(--border);
+    color: var(--foreground);
+}
+
+.postTitle {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--foreground);
+    text-decoration: none;
+}
+
+.postTitle:hover {
+    color: var(--primary);
+}
+
+.draft {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: #333;
+    color: #ccc;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.published {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(35, 134, 54, 0.2);
+    color: #4cd964;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.deleteBtn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: #ff4d4f;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.deleteBtn:hover {
+    background: #ff4d4f;
+    color: white;
+    border-color: #ff4d4f;
+}

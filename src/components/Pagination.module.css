@@ -1,0 +1,50 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+}
+
+.pages {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.link {
+    color: var(--primary);
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.disabled {
+    color: var(--secondary);
+    cursor: not-allowed;
+}
+
+.pageLink {
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    color: var(--secondary);
+}
+
+.pageLink:hover {
+    background: var(--code-bg);
+    text-decoration: none;
+    color: var(--foreground);
+}
+
+.active {
+    background: var(--border);
+    color: var(--foreground);
+    font-weight: bold;
+}
+
+.dots {
+    color: var(--secondary);
+    padding: 0.25rem;
+}

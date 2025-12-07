@@ -1,0 +1,32 @@
+import { prisma } from '@/lib/prisma';
+import { MetadataRoute } from 'next';
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://siyahsensei.com';
+
+    
+    const routes = [
+        '',
+        '/about',
+    ].map((route) => ({
+        url: `${baseUrl}${route}`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 1,
+    }));
+
+    
+    const posts = await prisma.post.findMany({
+        where: { status: 'PUBLISHED' },
+        select: { slug: true, updatedAt: true },
+    });
+
+    const postRoutes = posts.map((post) => ({
+        url: `${baseUrl}/posts/${post.slug}`,
+        lastModified: post.updatedAt,
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+    }));
+
+    return [...routes, ...postRoutes];
+}
