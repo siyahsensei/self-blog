@@ -56,6 +56,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Siyah Sensei Blog RSS Feed"
+          href="/feed.xml"
+        />
+      </head>
       <body className={`${robotoSlab.variable} ${openSans.variable} ${firaCode.variable}`}>
         <Header />
         <main>
