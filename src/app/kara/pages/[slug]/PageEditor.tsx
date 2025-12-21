@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import MarkdownView from '@/components/MarkdownView';
 import { updatePage } from '../actions';
 import { Page } from '@prisma/client';
-import styles from '../../components/PostForm.module.css'; 
+import styles from '../../components/PostForm.module.css';
 import ImageUploader from '@/components/ImageUploader';
 
 interface PageEditorProps {
@@ -13,17 +13,33 @@ interface PageEditorProps {
 
 export default function PageEditor({ page }: PageEditorProps) {
     const [content, setContent] = useState(page.content || '');
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const handleImageUpload = (url: string) => {
         const imageMarkdown = '\n![Image](' + url + ')\n';
-        setContent(prev => prev + imageMarkdown);
+        const textarea = textareaRef.current;
+
+        if (textarea) {
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const newContent = content.slice(0, start) + imageMarkdown + content.slice(end);
+            setContent(newContent);
+
+            setTimeout(() => {
+                textarea.focus();
+                const newCursorPos = start + imageMarkdown.length;
+                textarea.setSelectionRange(newCursorPos, newCursorPos);
+            }, 0);
+        } else {
+            setContent(prev => prev + imageMarkdown);
+        }
     };
 
     const action = updatePage.bind(null, page.slug);
 
     return (
         <form action={action} className={styles.form}>
-            {}
+            { }
             <div className={styles.controls}>
                 <div className={styles.field}>
                     <label>Title</label>
@@ -58,11 +74,12 @@ export default function PageEditor({ page }: PageEditorProps) {
                 </button>
             </div>
 
-            {}
+            { }
             <div className={styles.editorContainer}>
                 <div className={styles.editorPane}>
                     <div className={styles.paneHeader}>Markdown Input</div>
                     <textarea
+                        ref={textareaRef}
                         name="content"
                         value={content}
                         onChange={(e) => setContent(e.target.value)}

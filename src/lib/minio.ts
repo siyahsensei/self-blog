@@ -10,14 +10,41 @@ const minioClient = new Minio.Client({
 
 export const BUCKET_NAME = process.env.MINIO_BUCKET_NAME || 'blog-images';
 
+export async function withRetry<T>(
+    operation: () => Promise<T>,
+    maxRetries: number = 3,
+    baseDelayMs: number = 1000
+): Promise<T> {
+    let lastError: Error | undefined;
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+            return await operation();
+        } catch (error: unknown) {
+            lastError = error as Error;
+            const errorCode = (error as { code?: string })?.code;
+
+            if (errorCode === 'EAI_AGAIN' || errorCode === 'ENOTFOUND' || errorCode === 'ETIMEDOUT') {
+                const delay = baseDelayMs * Math.pow(2, attempt);
+                console.warn(`MinIO operation failed (attempt ${attempt + 1}/${maxRetries}), retrying in ${delay}ms...`, errorCode);
+                await new Promise(resolve => setTimeout(resolve, delay));
+            } else {
+                throw error;
+            }
+        }
+    }
+
+    throw lastError;
+}
+
 export async function ensureBucketExists() {
     try {
-        const exists = await minioClient.bucketExists(BUCKET_NAME);
+        const exists = await withRetry(() => minioClient.bucketExists(BUCKET_NAME));
         if (!exists) {
-            await minioClient.makeBucket(BUCKET_NAME, 'us-east-1');
+            await withRetry(() => minioClient.makeBucket(BUCKET_NAME, 'us-east-1'));
             console.log(`Bucket ${BUCKET_NAME} created successfully.`);
 
-            
+
             const policy = {
                 Version: '2012-10-17',
                 Statement: [
@@ -30,7 +57,7 @@ export async function ensureBucketExists() {
                     },
                 ],
             };
-            await minioClient.setBucketPolicy(BUCKET_NAME, JSON.stringify(policy));
+            await withRetry(() => minioClient.setBucketPolicy(BUCKET_NAME, JSON.stringify(policy)));
             console.log(`Bucket policy set to public read for ${BUCKET_NAME}.`);
         }
     } catch (err) {
@@ -39,3 +66,4 @@ export async function ensureBucketExists() {
 }
 
 export default minioClient;
+

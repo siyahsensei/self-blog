@@ -6,7 +6,6 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://blog.siyahsensei.com';
 
-    // Create feed instance
     const feed = new Feed({
         title: 'Siyah Sensei Blog',
         description: 'Technical tutorials on Software Engineering, Next.js, and Systems Architecture.',
@@ -29,7 +28,6 @@ export async function GET() {
         },
     });
 
-    // Fetch all published posts
     const posts = await prisma.post.findMany({
         where: { status: 'PUBLISHED' },
         orderBy: { createdAt: 'desc' },
@@ -45,14 +43,11 @@ export async function GET() {
         },
     });
 
-    // Add each post to the feed
     posts.forEach((post) => {
         const postUrl = `${baseUrl}/posts/${post.slug}`;
-
-        // Extract first paragraph or first 200 chars as description
         const description = post.content
-            .replace(/[#*`]/g, '') // Remove markdown symbols
-            .split('\n\n')[0] // Get first paragraph
+            .replace(/[#*`]/g, '')
+            .split('\n\n')[0]
             .substring(0, 200) + '...';
 
         feed.addItem({
@@ -74,7 +69,6 @@ export async function GET() {
         });
     });
 
-    // Return RSS feed
     return new Response(feed.rss2(), {
         headers: {
             'Content-Type': 'application/xml; charset=utf-8',

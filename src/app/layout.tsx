@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 import { Roboto_Slab, Open_Sans, Fira_Code } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 import Header from '@/components/Header';
+
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 const robotoSlab = Roboto_Slab({
   subsets: ['latin'],
@@ -63,6 +66,23 @@ export default function RootLayout({
           title="Siyah Sensei Blog RSS Feed"
           href="/feed.xml"
         />
+        {/* Google Analytics 4 */}
+        {GA_MEASUREMENT_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_MEASUREMENT_ID}');
+              `}
+            </Script>
+          </>
+        )}
       </head>
       <body className={`${robotoSlab.variable} ${openSans.variable} ${firaCode.variable}`}>
         <Header />

@@ -17,8 +17,9 @@ export default function PostForm({ post }: PostFormProps) {
     const [slug, setSlug] = useState(post?.slug || '');
     const [content, setContent] = useState(post?.content || '');
     const [isDirty, setIsDirty] = useState(false);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    
+
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTitle = e.target.value;
         setTitle(newTitle);
@@ -32,22 +33,36 @@ export default function PostForm({ post }: PostFormProps) {
     const action = post ? updatePost.bind(null, post.id) : createPost;
 
     const handleImageUpload = (url: string) => {
-        
         const imageMarkdown = '\n![Image](' + url + ')\n';
-        setContent(prev => prev + imageMarkdown);
+        const textarea = textareaRef.current;
+
+        if (textarea) {
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const newContent = content.slice(0, start) + imageMarkdown + content.slice(end);
+            setContent(newContent);
+
+            setTimeout(() => {
+                textarea.focus();
+                const newCursorPos = start + imageMarkdown.length;
+                textarea.setSelectionRange(newCursorPos, newCursorPos);
+            }, 0);
+        } else {
+            setContent(prev => prev + imageMarkdown);
+        }
     };
 
     return (
         <form action={action} className={styles.form}>
-            {}
+            { }
             <div className={styles.controls}>
                 <div className={styles.field}>
                     <label>Featured Image</label>
                     <ImageUploader
                         defaultImage={post?.featuredImage || undefined}
                         onUpload={(url) => {
-                            
-                            
+
+
                             const input = document.getElementById('featuredImageInput') as HTMLInputElement;
                             if (input) input.value = url;
                         }}
@@ -114,11 +129,12 @@ export default function PostForm({ post }: PostFormProps) {
                 </button>
             </div>
 
-            {}
+            { }
             <div className={styles.editorContainer}>
                 <div className={styles.editorPane}>
                     <div className={styles.paneHeader}>Markdown Input</div>
                     <textarea
+                        ref={textareaRef}
                         name="content"
                         value={content}
                         onChange={(e) => setContent(e.target.value)}

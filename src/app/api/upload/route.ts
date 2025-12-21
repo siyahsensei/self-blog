@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import minioClient, { BUCKET_NAME, ensureBucketExists } from '@/lib/minio';
+import minioClient, { BUCKET_NAME, ensureBucketExists, withRetry } from '@/lib/minio';
 import crypto from 'crypto';
 import { extname } from 'path';
 
@@ -15,13 +15,13 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
-        
+
         const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         if (!validTypes.includes(file.type)) {
             return NextResponse.json({ error: 'Invalid file type' }, { status: 400 });
         }
 
-        
+
         if (file.size > 5 * 1024 * 1024) {
             return NextResponse.json({ error: 'File too large (max 5MB)' }, { status: 400 });
         }
@@ -34,7 +34,9 @@ export async function POST(request: NextRequest) {
             'Content-Type': file.type,
         };
 
-        await minioClient.putObject(BUCKET_NAME, filename, buffer, buffer.length, metaData);
+        await withRetry(() =>
+            minioClient.putObject(BUCKET_NAME, filename, buffer, buffer.length, metaData)
+        );
 
         const protocol = process.env.MINIO_USE_SSL === 'true' ? 'https' : 'http';
         const endpoint = process.env.MINIO_ENDPOINT || 'localhost';
@@ -48,7 +50,7 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        
+
         const url = `${protocol}://${endpoint}${port}/${BUCKET_NAME}/${filename}`;
 
         return NextResponse.json({ url });
