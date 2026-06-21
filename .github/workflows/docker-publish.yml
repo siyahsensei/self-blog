@@ -12,7 +12,6 @@ env:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
-    # Gerekli izinler: image push etmek için
     permissions:
       contents: read
       packages: write
@@ -36,7 +35,6 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          # Docker image için tag kuralları
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=ref,event=branch
@@ -50,6 +48,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          # GitHub Actions cache kullanarak build sürelerini hızlandırıyoruz
           cache-from: type=gha
           cache-to: type=gha,mode=max
